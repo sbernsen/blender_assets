@@ -70,7 +70,7 @@ def gaussian_field(
 
     Returns
     -------
-    z : ndarray, shape (ny, nx)
+    z : ndarray, shape (nx, ny)
         Height values in physical units (metres).  To convert to grid-cell
         indices, divide by the grid spacing in the insertion direction.
     """
@@ -87,7 +87,7 @@ def gaussian_field(
     z = srf(
         (X.ravel(), Y.ravel()), mesh_type="unstructured"
     ).reshape(Y.shape)
-    return z
+    return z.T  # transpose from (ny, nx) to (nx, ny)
 
 
 def spectral_field(
@@ -123,7 +123,7 @@ def spectral_field(
 
     Returns
     -------
-    z : ndarray, shape (ny, nx)
+    z : ndarray, shape (nx, ny)
         Height values in physical units (metres).
     """
     x = np.linspace(0, lx, nx)
@@ -138,7 +138,7 @@ def spectral_field(
         seed=seed,
     )
     z = srf.structured((x, y))
-    return z
+    return z.T  # transpose from (ny, nx) to (nx, ny)
 
 
 # =============================================================================

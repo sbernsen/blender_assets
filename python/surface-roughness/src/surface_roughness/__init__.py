@@ -12,6 +12,7 @@ from surface_roughness.classes.definitions import (
     write_geometry,
     build_seidart_surfaces,
 )
+from surface_roughness.classes.objexport import geometry_to_obj
 
 __all__ = [
     "RoughSurface",
@@ -24,4 +25,5 @@ __all__ = [
     "insert_surface_rotated",
     "write_geometry",
     "build_seidart_surfaces",
+    "geometry_to_obj",
 ]
