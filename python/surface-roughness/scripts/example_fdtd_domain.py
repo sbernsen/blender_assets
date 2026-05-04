@@ -13,7 +13,8 @@ This script demonstrates:
 2. Generating multiple rough surfaces with independent statistics
 3. Inserting them (with optional tilt) into the domain
 4. Writing ``geometry.dat`` and updating a SeidarT project JSON
-5. Visualising cross-sections of the result
+5. Exporting OBJ + MTL for Blender visualisation / manipulation
+6. Visualising cross-sections of the result
 
 The generated domain can then be loaded by the standard SeidarT pipeline::
 
@@ -48,6 +49,7 @@ from surface_roughness import (
     insert_surface_rotated,
     write_geometry,
     build_seidart_surfaces,
+    geometry_to_obj,
 )
 
 # ============================================================================
@@ -156,7 +158,41 @@ write_geometry(geometry, filename="geometry.dat")
 print("\nWrote geometry.dat")
 
 # ============================================================================
-# Step 6: Visualise
+# Step 6: Export OBJ + MTL for Blender
+# ============================================================================
+# Full domain (all materials visible)
+geometry_to_obj(
+    geometry,
+    "domain.obj",
+    dx=dx, dy=dy, dz=dz,
+    material_names={AIR: "air", ROCK: "rock", ICE: "ice", WATER: "water"},
+    material_colours={
+        AIR:   "200/200/200",
+        ROCK:  "140/70/20",
+        ICE:   "128/210/245",
+        WATER: "0/0/200",
+    },
+)
+
+# Subsurface only (skip air for a cleaner Blender view)
+geometry_to_obj(
+    geometry,
+    "domain_no_air.obj",
+    dx=dx, dy=dy, dz=dz,
+    material_names={ROCK: "rock", ICE: "ice", WATER: "water"},
+    material_colours={
+        ROCK:  "140/70/20",
+        ICE:   "128/210/245",
+        WATER: "0/0/200",
+    },
+    skip_ids={AIR},
+)
+print("\nOBJ files ready for Blender import.")
+print("After editing in Blender, export as OBJ+MTL and use with")
+print("seidart.routines.classes.Domain3D to re-voxelise.")
+
+# ============================================================================
+# Step 7: Visualise
 # ============================================================================
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 
